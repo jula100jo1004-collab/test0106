@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical AI Lab - 피지컬 AI 교육 전문가</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        /* SVG 배경 패턴 */
+        .circuit-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%231a1a2e'/%3E%3Cpath d='M20 20h60v60H20z' fill='none' stroke='%233162e6' stroke-width='0.5' opacity='0.3'/%3E%3Cpath d='M30 30h40v40H30z' fill='none' stroke='%233162e6' stroke-width='0.5' opacity='0.2'/%3E%3Ccircle cx='50' cy='50' r='2' fill='%233162e6' opacity='0.4'/%3E%3Cpath d='M10 50h80M50 10v80' stroke='%233162e6' stroke-width='0.3' opacity='0.2'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+        }
+        
+        /* 신경망 패턴 */
+        .neural-pattern {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(49, 98, 230, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(49, 98, 230, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(49, 98, 230, 0.05) 0%, transparent 70%);
+        }
+        
+        /* 스크롤 애니메이션 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 성공 메시지 애니메이션 */
+        #success-message {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+        
+        #success-message.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 피지컬 AI 이미지 애니메이션 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        
+        #physical-ai-image {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        #physical-ai-image circle,
+        #physical-ai-image rect {
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Header -->
+    <header class="fixed top-0 w-full bg-gray-900/95 backdrop-blur-sm z-50 border-b border-gray-800">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="cpu" class="w-8 h-8 text-blue-500"></i>
+                    <span class="text-xl font-bold text-white">Physical AI Lab</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#intro" class="text-gray-300 hover:text-blue-400 transition-colors">소개</a>
+                    <a href="#career" class="text-gray-300 hover:text-blue-400 transition-colors">경력</a>
+                    <a href="#curriculum" class="text-gray-300 hover:text-blue-400 transition-colors">교육과정</a>
+                    <a href="#application" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors">신청</a>
+                </div>
+                <button class="md:hidden text-gray-300" id="mobile-menu-btn">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div class="hidden md:hidden mt-4 pb-4" id="mobile-menu">
+                <a href="#intro" class="block py-2 text-gray-300 hover:text-blue-400">소개</a>
+                <a href="#career" class="block py-2 text-gray-300 hover:text-blue-400">경력</a>
+                <a href="#curriculum" class="block py-2 text-gray-300 hover:text-blue-400">교육과정</a>
+                <a href="#application" class="block py-2 text-blue-400">신청</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden circuit-pattern neural-pattern">
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-gray-900"></div>
+        <div class="container mx-auto px-6 py-20 relative z-10">
+            <div class="flex flex-col md:flex-row items-center gap-12 fade-in">
+                <!-- 강사 이미지 (왼쪽) -->
+                <div class="w-64 h-64 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 p-2 shadow-2xl flex-shrink-0">
+                    <div class="w-full h-full rounded-full bg-gray-800 overflow-hidden">
+                        <img src="강사이미지.png" alt="SmartSSAM 강사" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                
+                <!-- 텍스트 콘텐츠 (중앙) -->
+                <div class="text-center md:text-left flex-1">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                        SmartSSAM
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-300 mb-6">SmartSSAM</p>
+                    <p class="text-2xl md:text-3xl font-semibold text-white leading-relaxed">
+                        세상을 움직이는 인공지능,<br>
+                        <span class="text-blue-400">피지컬 AI</span>로 시작하세요
+                    </p>
+                    <p class="text-lg text-gray-400 mt-6 italic">
+                        "화면 속 AI를 넘어, 현실을 제어하는 피지컬 AI의 세계로"
+                    </p>
+                    <a href="#application" class="inline-block mt-8 bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
+                        교육 신청하기
+                    </a>
+                </div>
+                
+                <!-- 피지컬 AI 이미지 (오른쪽) -->
+                <div class="hidden lg:block flex-shrink-0 w-80 h-80 fade-in">
+                    <div class="relative w-full h-full" id="physical-ai-image">
+                        <!-- 피지컬 AI 관련 SVG 이미지 -->
+                        <svg viewBox="0 0 400 400" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="aiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+                                </linearGradient>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            
+                            <!-- 배경 원형 -->
+                            <circle cx="200" cy="200" r="180" fill="url(#aiGradient)" opacity="0.2"/>
+                            
+                            <!-- 로봇 팔 -->
+                            <g transform="translate(200, 200)">
+                                <!-- 로봇 베이스 -->
+                                <rect x="-30" y="80" width="60" height="40" rx="5" fill="#3b82f6" opacity="0.8"/>
+                                <!-- 팔 1 -->
+                                <line x1="0" y1="80" x2="-60" y2="20" stroke="#60a5fa" stroke-width="8" stroke-linecap="round"/>
+                                <circle cx="-60" cy="20" r="12" fill="#3b82f6"/>
+                                <!-- 팔 2 -->
+                                <line x1="-60" y1="20" x2="-100" y2="-40" stroke="#60a5fa" stroke-width="6" stroke-linecap="round"/>
+                                <circle cx="-100" cy="-40" r="10" fill="#3b82f6"/>
+                                <!-- 그리퍼 -->
+                                <path d="M -100 -40 L -120 -50 L -120 -30 Z" fill="#60a5fa" opacity="0.9"/>
+                                <path d="M -100 -40 L -120 -30 L -120 -50 Z" fill="#60a5fa" opacity="0.9"/>
+                            </g>
+                            
+                            <!-- 드론 -->
+                            <g transform="translate(200, 120)">
+                                <circle cx="0" cy="0" r="25" fill="none" stroke="#3b82f6" stroke-width="3" opacity="0.6"/>
+                                <circle cx="0" cy="0" r="15" fill="#3b82f6" opacity="0.4"/>
+                                <!-- 프로펠러 -->
+                                <line x1="0" y1="0" x2="30" y2="0" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+                                <line x1="0" y1="0" x2="-30" y2="0" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+                                <line x1="0" y1="0" x2="0" y2="30" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+                                <line x1="0" y1="0" x2="0" y2="-30" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+                            </g>
+                            
+                            <!-- 회로 패턴 -->
+                            <g opacity="0.4">
+                                <rect x="50" y="50" width="80" height="60" rx="3" fill="none" stroke="#60a5fa" stroke-width="2"/>
+                                <line x1="70" y1="50" x2="70" y2="110" stroke="#60a5fa" stroke-width="1"/>
+                                <line x1="90" y1="50" x2="90" y2="110" stroke="#60a5fa" stroke-width="1"/>
+                                <line x1="110" y1="50" x2="110" y2="110" stroke="#60a5fa" stroke-width="1"/>
+                                <circle cx="70" cy="70" r="3" fill="#3b82f6"/>
+                                <circle cx="90" cy="90" r="3" fill="#3b82f6"/>
+                                <circle cx="110" cy="70" r="3" fill="#3b82f6"/>
+                            </g>
+                            
+                            <!-- AI 신경망 노드 -->
+                            <g opacity="0.5">
+                                <circle cx="300" cy="100" r="8" fill="#60a5fa"/>
+                                <circle cx="320" cy="120" r="8" fill="#60a5fa"/>
+                                <circle cx="300" cy="140" r="8" fill="#60a5fa"/>
+                                <circle cx="280" cy="120" r="8" fill="#60a5fa"/>
+                                <line x1="300" y1="100" x2="320" y2="120" stroke="#60a5fa" stroke-width="1"/>
+                                <line x1="300" y1="100" x2="280" y2="120" stroke="#60a5fa" stroke-width="1"/>
+                                <line x1="320" y1="120" x2="300" y2="140" stroke="#60a5fa" stroke-width="1"/>
+                                <line x1="280" y1="120" x2="300" y2="140" stroke="#60a5fa" stroke-width="1"/>
+                            </g>
+                            
+                            <!-- 센서/카메라 -->
+                            <g transform="translate(150, 280)">
+                                <rect x="-15" y="-10" width="30" height="20" rx="3" fill="#3b82f6" opacity="0.7"/>
+                                <circle cx="0" cy="0" r="8" fill="#1e40af"/>
+                                <circle cx="0" cy="0" r="4" fill="#60a5fa"/>
+                            </g>
+                            
+                            <!-- 연결선 (데이터 흐름) -->
+                            <path d="M 130 280 Q 200 250 270 120" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.3" stroke-dasharray="5,5"/>
+                            <path d="M 50 80 Q 100 150 200 200" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.3" stroke-dasharray="5,5"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About & Career Section -->
+    <section id="intro" class="py-20 bg-gray-800">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 fade-in">
+                <span class="text-blue-400">소개</span> 및 경력
+            </h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <!-- Contact Info -->
+                <div class="bg-gray-900 rounded-xl p-8 mb-8 shadow-xl fade-in">
+                    <h3 class="text-2xl font-semibold mb-6 text-blue-400">연락처 정보</h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="user" class="w-5 h-5 text-blue-400"></i>
+                            <div>
+                                <p class="text-gray-400 text-sm">이름</p>
+                                <p class="text-white font-medium">SmartSSAM</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="mail" class="w-5 h-5 text-blue-400"></i>
+                            <div>
+                                <p class="text-gray-400 text-sm">이메일</p>
+                                <p class="text-white font-medium">[이메일]</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="phone" class="w-5 h-5 text-blue-400"></i>
+                            <div>
+                                <p class="text-gray-400 text-sm">연락처</p>
+                                <p class="text-white font-medium">[전화번호]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div class="bg-gray-900 rounded-xl p-8 mb-8 shadow-xl fade-in">
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-blue-600 rounded-lg p-3">
+                            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-semibold mb-4 text-blue-400">학력</h3>
+                            <p class="text-gray-300 text-lg">AI 로봇공학 석사 졸업</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Career -->
+                <div id="career" class="bg-gray-900 rounded-xl p-8 mb-8 shadow-xl fade-in">
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-blue-600 rounded-lg p-3">
+                            <i data-lucide="briefcase" class="w-6 h-6"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-semibold mb-4 text-blue-400">경력</h3>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-start space-x-2">
+                                    <i data-lucide="check-circle" class="w-5 h-5 text-blue-400 mt-1 flex-shrink-0"></i>
+                                    <span>전 [OO 연구소] 선임연구원</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i data-lucide="check-circle" class="w-5 h-5 text-blue-400 mt-1 flex-shrink-0"></i>
+                                    <span>현 [OO 에듀] 대표 강사</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i data-lucide="check-circle" class="w-5 h-5 text-blue-400 mt-1 flex-shrink-0"></i>
+                                    <span>AI/로봇 관련 대회 심사위원 5년</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Qualifications -->
+                <div class="bg-gray-900 rounded-xl p-8 shadow-xl fade-in">
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-blue-600 rounded-lg p-3">
+                            <i data-lucide="award" class="w-6 h-6"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-semibold mb-4 text-blue-400">자격</h3>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-lg border border-blue-600/30">정보처리기사</span>
+                                <span class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-lg border border-blue-600/30">AI 교육전문가 1급</span>
+                                <span class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-lg border border-blue-600/30">로봇 기술자격</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Philosophy -->
+    <section class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-4xl font-bold mb-6 text-blue-400">교육 철학</h2>
+                <p class="text-xl text-gray-300 leading-relaxed">
+                    단순 코딩을 넘어 논리적 사고와 하드웨어 제어 능력을 동시에 기릅니다.
+                </p>
+                <div class="mt-12 bg-gray-800 rounded-xl p-8">
+                    <div class="flex items-center justify-center space-x-8">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-blue-400">20%</div>
+                            <div class="text-gray-400 mt-2">이론</div>
+                        </div>
+                        <div class="text-4xl text-gray-600">+</div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-blue-400">80%</div>
+                            <div class="text-gray-400 mt-2">실습</div>
+                        </div>
+                    </div>
+                    <p class="text-lg text-gray-300 mt-6 italic">
+                        당장 결과물을 만들어내는 실전형 커리큘럼
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curriculum Section -->
+    <section id="curriculum" class="py-20 bg-gray-800">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4 fade-in">
+                <span class="text-blue-400">교육과정</span>
+            </h2>
+            <p class="text-center text-gray-400 mb-12 fade-in">단계별 맞춤형 피지컬 AI 교육 프로그램</p>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Course 1 -->
+                <div class="bg-gray-900 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 fade-in">
+                    <div class="bg-blue-600 rounded-lg w-12 h-12 flex items-center justify-center mb-6">
+                        <span class="text-white font-bold text-xl">1</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-sm font-semibold">기초</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-white">
+                        아두이노와 파이썬으로 배우는 AI 기초
+                    </h3>
+                    <p class="text-gray-400 mb-6">
+                        하드웨어와 소프트웨어의 첫 만남. 아두이노를 활용한 기본 센서 제어부터 파이썬 기초 프로그래밍까지 체계적으로 학습합니다.
+                    </p>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>아두이노 기초 및 센서 활용</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>파이썬 프로그래밍 기초</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>간단한 AI 프로젝트 실습</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Course 2 -->
+                <div class="bg-gray-900 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 fade-in">
+                    <div class="bg-blue-600 rounded-lg w-12 h-12 flex items-center justify-center mb-6">
+                        <span class="text-white font-bold text-xl">2</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-sm font-semibold">중급</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-white">
+                        컴퓨터 비전을 활용한 자율주행 로봇 제작
+                    </h3>
+                    <p class="text-gray-400 mb-6">
+                        카메라와 AI를 결합한 실제 자율주행 로봇을 만들어봅니다. 컴퓨터 비전 기술과 로봇 제어를 통합적으로 학습합니다.
+                    </p>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>OpenCV 기초 및 이미지 처리</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>객체 인식 및 추적 알고리즘</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>자율주행 로봇 제작 프로젝트</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Course 3 -->
+                <div class="bg-gray-900 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 fade-in">
+                    <div class="bg-blue-600 rounded-lg w-12 h-12 flex items-center justify-center mb-6">
+                        <span class="text-white font-bold text-xl">3</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-sm font-semibold">고급</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-white">
+                        엣지 컴퓨팅 기반 스마트 홈 시스템 프로젝트
+                    </h3>
+                    <p class="text-gray-400 mb-6">
+                        실제 스마트 홈 환경을 구축하는 고급 프로젝트. 엣지 AI와 IoT를 결합한 실전 시스템을 개발합니다.
+                    </p>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>엣지 AI 및 TensorFlow Lite</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>IoT 센서 네트워크 구축</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                            <span>스마트 홈 통합 시스템 개발</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form Section -->
+    <section id="application" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4 fade-in">
+                <span class="text-blue-400">교육 신청</span>
+            </h2>
+            <p class="text-center text-gray-400 mb-12 fade-in">나에게 맞는 피지컬 AI 과정을 선택하고 상담을 신청하세요</p>
+            
+            <div class="max-w-2xl mx-auto">
+                <!-- Success Message (Hidden by default) -->
+                <div id="success-message" class="hidden bg-blue-600/20 border-2 border-blue-500 rounded-xl p-10 text-center shadow-xl fade-in">
+                    <div class="mb-4">
+                        <i data-lucide="check-circle" class="w-16 h-16 text-blue-400 mx-auto"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-blue-400 mb-2">신청이 완료되었습니다!</h3>
+                    <p class="text-gray-300 mb-6">확인 후 24시간 이내에 기재하신 연락처로 안내해 드리겠습니다.</p>
+                    <button 
+                        id="reset-form-btn"
+                        class="text-blue-400 hover:text-blue-300 underline font-semibold transition-colors"
+                    >
+                        다시 작성하기
+                    </button>
+                </div>
+
+                <!-- Application Form -->
+                <form id="application-form" class="bg-gray-800 rounded-xl p-8 shadow-xl fade-in">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-300 mb-2">
+                                성함 / 학생이름
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                    <i data-lucide="user" class="w-5 h-5"></i>
+                                </span>
+                                <input 
+                                    type="text" 
+                                    id="name" 
+                                    name="name" 
+                                    required
+                                    class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                    placeholder="홍길동"
+                                >
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="contact" class="block text-sm font-medium text-gray-300 mb-2">
+                                연락처
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                    <i data-lucide="phone" class="w-5 h-5"></i>
+                                </span>
+                                <input 
+                                    type="tel" 
+                                    id="contact" 
+                                    name="contact" 
+                                    required
+                                    class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                    placeholder="010-0000-0000"
+                                >
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="course" class="block text-sm font-medium text-gray-300 mb-2">
+                                희망 교육 과정
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                                </span>
+                                <select 
+                                    id="course" 
+                                    name="course" 
+                                    required
+                                    class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none"
+                                >
+                                    <option value="">과정을 선택해주세요</option>
+                                    <option value="기초">AI 기초 (아두이노/파이썬)</option>
+                                    <option value="중급">AI 자율주행 로봇 제작</option>
+                                    <option value="고급">스마트 홈 엣지 컴퓨팅</option>
+                                </select>
+                                <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 pointer-events-none">
+                                    <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="inquiry" class="block text-sm font-medium text-gray-300 mb-2">
+                                문의 및 요청사항
+                            </label>
+                            <div class="relative">
+                                <span class="absolute top-3 left-3 text-gray-400">
+                                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                                </span>
+                                <textarea 
+                                    id="inquiry" 
+                                    name="inquiry" 
+                                    rows="4"
+                                    class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
+                                    placeholder="희망하는 요일이나 특별한 요구사항이 있다면 적어주세요."
+                                ></textarea>
+                            </div>
+                        </div>
+                        
+                        <button 
+                            type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg transition-all transform hover:scale-105 active:scale-[0.98] flex items-center justify-center space-x-2 shadow-lg"
+                        >
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                            <span>수강 신청 완료하기</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i data-lucide="cpu" class="w-6 h-6 text-blue-500"></i>
+                        <span class="text-lg font-bold text-white">Physical AI Lab</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        © 2024 Physical AI Lab. All rights reserved.
+                    </p>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors" aria-label="Facebook">
+                        <i data-lucide="facebook" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors" aria-label="Instagram">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors" aria-label="LinkedIn">
+                        <i data-lucide="linkedin" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors" aria-label="YouTube">
+                        <i data-lucide="youtube" class="w-6 h-6"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lucide 아이콘 초기화
+        lucide.createIcons();
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.setAttribute('data-lucide', 'menu');
+                } else {
+                    icon.setAttribute('data-lucide', 'x');
+                }
+                lucide.createIcons();
+            });
+        }
+        
+        // Scroll animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Form submission
+        const form = document.getElementById('application-form');
+        const successMessage = document.getElementById('success-message');
+        const resetFormBtn = document.getElementById('reset-form-btn');
+        
+        if (form && successMessage && resetFormBtn) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+                
+                // 실제 백엔드 연동 전, 로직 처리 시뮬레이션
+                console.log("신청 데이터:", data);
+                
+                // 폼 숨기고 성공 메시지 표시
+                form.classList.add('hidden');
+                successMessage.classList.remove('hidden');
+                
+                // 성공 메시지 fade-in 애니메이션 적용
+                setTimeout(() => {
+                    successMessage.classList.add('visible');
+                }, 10);
+                
+                // 아이콘 다시 초기화 (체크 아이콘 표시)
+                lucide.createIcons();
+            });
+            
+            // 다시 작성하기 버튼 클릭 시
+            resetFormBtn.addEventListener('click', () => {
+                successMessage.classList.remove('visible');
+                setTimeout(() => {
+                    successMessage.classList.add('hidden');
+                    form.classList.remove('hidden');
+                    form.reset();
+                    
+                    // 폼이 다시 표시될 때 fade-in 애니메이션 적용
+                    setTimeout(() => {
+                        form.classList.add('visible');
+                    }, 10);
+                    
+                    // 아이콘 다시 초기화
+                    lucide.createIcons();
+                }, 300); // 애니메이션 완료 대기
+            });
+        }
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileMenuBtn.querySelector('i');
+                        icon.setAttribute('data-lucide', 'menu');
+                        lucide.createIcons();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
